@@ -783,12 +783,12 @@ class ImageParticles {
         this.imageLoaded = false;
         this.animationPhase = 'assembling'; // 'assembling', 'idle', 'exploding'
         
-        // Configuration
-        this.particleGap = 3; // Lower = more particles (more detailed)
-        this.particleSize = 2;
-        this.assembleSpeed = 0.08;
-        this.returnSpeed = 0.05;
-        this.mouseRepelForce = 8;
+        // Configuration - Maximum clarity
+        this.particleGap = 1; // Every pixel = maximum detail
+        this.particleSize = 1.2; // Smaller but denser
+        this.assembleSpeed = 0.1;
+        this.returnSpeed = 0.06;
+        this.mouseRepelForce = 4;
         
         this.init();
     }
@@ -876,10 +876,10 @@ class ImageParticles {
                 const b = pixels[index + 2];
                 const a = pixels[index + 3];
                 
-                // Skip transparent/near-black pixels
-                if (a < 50) continue;
+                // Skip transparent pixels only
+                if (a < 30) continue;
                 const brightness = (r + g + b) / 3;
-                if (brightness < 15) continue;
+                if (brightness < 8) continue; // Lower threshold = more detail in dark areas
                 
                 // Calculate HSL for color enhancement
                 const max = Math.max(r, g, b);
@@ -911,7 +911,7 @@ class ImageParticles {
                     vx: 0,
                     vy: 0,
                     color: `rgb(${finalR}, ${finalG}, ${finalB})`,
-                    size: this.particleSize + (brightness / 255) * 1,
+                    size: this.particleSize, // Uniform size for crisp image
                     brightness: brightness,
                     assembled: false
                 });
