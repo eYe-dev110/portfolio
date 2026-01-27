@@ -22,7 +22,6 @@ class CustomCursor {
     
     init() {
         if (window.matchMedia('(pointer: coarse)').matches) {
-            // Touch device - hide cursor elements
             this.follower.style.display = 'none';
             this.dot.style.display = 'none';
             return;
@@ -33,7 +32,6 @@ class CustomCursor {
             this.mouseY = e.clientY;
         });
         
-        // Interactive elements
         const interactiveElements = document.querySelectorAll('a, button, .skill-category, .timeline-content, .contact-card');
         interactiveElements.forEach(el => {
             el.addEventListener('mouseenter', () => this.follower.classList.add('hover'));
@@ -44,11 +42,9 @@ class CustomCursor {
     }
     
     animate() {
-        // Smooth follow for the ring
         this.followerX += (this.mouseX - this.followerX) * 0.1;
         this.followerY += (this.mouseY - this.followerY) * 0.1;
         
-        // Faster follow for the dot
         this.dotX += (this.mouseX - this.dotX) * 0.2;
         this.dotY += (this.mouseY - this.dotY) * 0.2;
         
@@ -783,12 +779,29 @@ class ImageParticles {
         this.imageLoaded = false;
         this.animationPhase = 'assembling'; // 'assembling', 'idle', 'exploding'
         
-        // Configuration - Maximum clarity
-        this.particleGap = 1; // Every pixel = maximum detail
-        this.particleSize = 1.2; // Smaller but denser
-        this.assembleSpeed = 0.1;
-        this.returnSpeed = 0.06;
-        this.mouseRepelForce = 4;
+        // Configuration - Water Cup Fill Effect
+        this.particleGap = 2;
+        this.particleSize = 2;
+        this.returnSpeed = 0.1;
+        this.mouseRepelForce = 5;
+        
+        // Water fill settings
+        this.waterLevel = 0; // 0 = empty, 1 = full
+        this.fillPerDrop = 0.0008; // Water rises when drops land
+        this.phase = 'filling'; // 'filling', 'complete', 'idle'
+        this.waveTime = 0;
+        this.waveAmplitude = 0;
+        this.waveDecay = 0.97;
+        
+        // Waterfall drops
+        this.waterfallDrops = [];
+        this.dropSpawnRate = 4; // Drops per frame
+        
+        // Bubbles
+        this.bubbles = [];
+        
+        // Splash particles at water surface
+        this.splashes = [];
         
         this.init();
     }
@@ -895,25 +908,25 @@ class ImageParticles {
                     finalB = Math.min(255, b + 25);
                 }
                 
-                // Random starting position (scattered)
-                const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * Math.max(this.width, this.height) + 200;
-                const startX = this.width / 2 + Math.cos(angle) * distance;
-                const startY = this.height / 2 + Math.sin(angle) * distance;
+                // Water fill - particles are at their final position from the start
+                // They become visible as the water level rises
                 
                 this.particles.push({
-                    x: startX,
-                    y: startY,
-                    targetX: x,
-                    targetY: y,
+                    x: x,
+                    y: y,
                     originX: x,
                     originY: y,
                     vx: 0,
                     vy: 0,
                     color: `rgb(${finalR}, ${finalG}, ${finalB})`,
-                    size: this.particleSize, // Uniform size for crisp image
+                    size: this.particleSize,
                     brightness: brightness,
-                    assembled: false
+                    // Normalized Y position (0 = top, 1 = bottom)
+                    normalizedY: y / this.height,
+                    // For wave and idle animation
+                    floatPhase: Math.random() * Math.PI * 2,
+                    floatSpeed: 0.02 + Math.random() * 0.02,
+                    floatRadius: 0.3 + Math.random() * 0.5
                 });
             }
         }
@@ -986,20 +999,26 @@ class ImageParticles {
     }
     
     explode() {
-        this.animationPhase = 'exploding';
+        // Trigger wave effect
+        this.waveAmplitude = 15;
+        this.waveTime = 0;
         
-        this.particles.forEach(particle => {
-            const angle = Math.random() * Math.PI * 2;
-            const force = Math.random() * 15 + 5;
-            particle.vx = Math.cos(angle) * force;
-            particle.vy = Math.sin(angle) * force;
-            particle.assembled = false;
-        });
-        
-        // Return to formation after a delay
-        setTimeout(() => {
-            this.animationPhase = 'assembling';
-        }, 1500);
+        // Create bubbles rising from bottom
+        this.createBubbles(30);
+    }
+    
+    createBubbles(count) {
+        for (let i = 0; i < count; i++) {
+            this.bubbles.push({
+                x: Math.random() * this.width,
+                y: this.height + Math.random() * 50,
+                size: 3 + Math.random() * 8,
+                speed: 1 + Math.random() * 3,
+                wobblePhase: Math.random() * Math.PI * 2,
+                wobbleSpeed: 0.05 + Math.random() * 0.1,
+                opacity: 0.3 + Math.random() * 0.5
+            });
+        }
     }
     
     animate() {
@@ -1007,57 +1026,297 @@ class ImageParticles {
         
         this.ctx.clearRect(0, 0, this.width, this.height);
         
-        let assembledCount = 0;
+        // Spawn waterfall drops (water level rises when drops land, not automatically)
+        if (this.phase === 'filling') {
+            this.spawnWaterfallDrops();
+            
+            if (this.waterLevel >= 1) {
+                this.waterLevel = 1;
+                this.phase = 'complete';
+                setTimeout(() => { this.phase = 'idle'; }, 300);
+            }
+        }
+        
+        // Update wave
+        this.waveTime += 0.1;
+        this.waveAmplitude *= this.waveDecay;
+        
+        // Update and draw waterfall
+        this.updateWaterfall();
+        
+        // Update and draw splashes
+        this.updateSplashes();
+        
+        // Update and draw bubbles
+        this.updateBubbles();
+        
+        // Draw water surface line (during filling)
+        if (this.phase === 'filling') {
+            this.drawWaterSurface();
+        }
         
         this.particles.forEach(particle => {
-            // Mouse repulsion
-            if (this.mouse.x !== null && this.mouse.y !== null) {
-                const dx = particle.x - this.mouse.x;
-                const dy = particle.y - this.mouse.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-                
-                if (distance < this.mouse.radius) {
-                    const force = (this.mouse.radius - distance) / this.mouse.radius;
-                    const angle = Math.atan2(dy, dx);
-                    particle.vx += Math.cos(angle) * force * this.mouseRepelForce;
-                    particle.vy += Math.sin(angle) * force * this.mouseRepelForce;
-                }
+            // Update float phase
+            particle.floatPhase += particle.floatSpeed;
+            
+            // Calculate if particle is "underwater" (visible)
+            // Water fills from bottom (normalizedY = 1) to top (normalizedY = 0)
+            const waterLineY = 1 - this.waterLevel; // 1 = bottom, 0 = top
+            const isUnderwater = particle.normalizedY >= waterLineY;
+            
+            if (!isUnderwater && this.phase === 'filling') {
+                // Particle is above water - not visible yet
+                return;
             }
             
-            // Return to target position
-            const targetDx = particle.targetX - particle.x;
-            const targetDy = particle.targetY - particle.y;
-            const targetDist = Math.sqrt(targetDx * targetDx + targetDy * targetDy);
+            // Wave effect on particles
+            let waveOffsetX = 0;
+            let waveOffsetY = 0;
             
-            const speed = this.animationPhase === 'assembling' ? this.assembleSpeed : this.returnSpeed;
-            
-            if (targetDist > 1) {
-                particle.vx += targetDx * speed;
-                particle.vy += targetDy * speed;
-            } else {
-                particle.assembled = true;
-                assembledCount++;
+            if (this.waveAmplitude > 0.5) {
+                // Wave travels from left to right
+                const wavePhase = particle.originX * 0.02 - this.waveTime;
+                waveOffsetX = Math.sin(wavePhase) * this.waveAmplitude * 0.5;
+                waveOffsetY = Math.cos(wavePhase) * this.waveAmplitude * 0.3;
             }
+            
+            // Gentle floating animation (always)
+            const floatX = Math.cos(particle.floatPhase) * particle.floatRadius;
+            const floatY = Math.sin(particle.floatPhase * 0.7) * particle.floatRadius;
+            
+            // Target position with wave and float
+            let targetX = particle.originX + floatX + waveOffsetX;
+            let targetY = particle.originY + floatY + waveOffsetY;
+            
+            // Smooth movement to target
+            particle.vx += (targetX - particle.x) * this.returnSpeed;
+            particle.vy += (targetY - particle.y) * this.returnSpeed;
+            
+            // Mouse interaction removed
             
             // Apply velocity with friction
             particle.x += particle.vx;
             particle.y += particle.vy;
-            particle.vx *= 0.9;
-            particle.vy *= 0.92;
+            particle.vx *= 0.85;
+            particle.vy *= 0.85;
             
             // Draw particle
             this.ctx.beginPath();
             this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            
+            // Slight glow for particles near water surface during filling
+            if (this.phase === 'filling' && Math.abs(particle.normalizedY - waterLineY) < 0.05) {
+                this.ctx.shadowBlur = 6;
+                this.ctx.shadowColor = 'rgba(0, 245, 212, 0.8)';
+            } else {
+                this.ctx.shadowBlur = 0;
+            }
+            
             this.ctx.fillStyle = particle.color;
             this.ctx.fill();
         });
         
-        // Check if assembly is complete
-        if (assembledCount >= this.particles.length * 0.95 && this.animationPhase === 'assembling') {
-            this.animationPhase = 'idle';
+        requestAnimationFrame(() => this.animate());
+    }
+    
+    // Spawn waterfall drops from top
+    spawnWaterfallDrops() {
+        const centerX = this.width / 2;
+        const spoutWidth = 40;
+        
+        for (let i = 0; i < this.dropSpawnRate; i++) {
+            this.waterfallDrops.push({
+                x: centerX + (Math.random() - 0.5) * spoutWidth,
+                y: -5,
+                vx: (Math.random() - 0.5) * 2,
+                vy: 2 + Math.random() * 3,
+                size: 2 + Math.random() * 3,
+                opacity: 0.6 + Math.random() * 0.4
+            });
+        }
+    }
+    
+    // Update waterfall drops
+    updateWaterfall() {
+        const waterSurfaceY = this.height * (1 - this.waterLevel);
+        const gravity = 0.3;
+        
+        this.waterfallDrops = this.waterfallDrops.filter(drop => {
+            // Apply gravity
+            drop.vy += gravity;
+            drop.x += drop.vx;
+            drop.y += drop.vy;
+            
+            // Add slight wobble
+            drop.vx += (Math.random() - 0.5) * 0.3;
+            
+            // Check if hit water surface (or bottom if no water yet)
+            const hitSurface = this.waterLevel > 0 ? drop.y >= waterSurfaceY : drop.y >= this.height - 10;
+            
+            if (hitSurface) {
+                // WATER RISES when drop lands!
+                this.waterLevel += this.fillPerDrop;
+                
+                // Create splash
+                this.createSplash(drop.x, this.waterLevel > 0 ? waterSurfaceY : this.height - 10);
+                // Create small bubbles
+                if (Math.random() > 0.6) {
+                    this.bubbles.push({
+                        x: drop.x + (Math.random() - 0.5) * 10,
+                        y: (this.waterLevel > 0 ? waterSurfaceY : this.height - 10) + 10,
+                        size: 2 + Math.random() * 4,
+                        speed: 0.5 + Math.random() * 1.5,
+                        wobblePhase: Math.random() * Math.PI * 2,
+                        wobbleSpeed: 0.05 + Math.random() * 0.1,
+                        opacity: 0.2 + Math.random() * 0.3
+                    });
+                }
+                return false; // Remove drop
+            }
+            
+            // Draw the drop with trail effect
+            this.ctx.save();
+            
+            // Trail
+            const trailLength = Math.min(drop.vy * 3, 20);
+            const gradient = this.ctx.createLinearGradient(
+                drop.x, drop.y - trailLength,
+                drop.x, drop.y
+            );
+            gradient.addColorStop(0, 'rgba(0, 245, 212, 0)');
+            gradient.addColorStop(1, `rgba(0, 245, 212, ${drop.opacity})`);
+            
+            this.ctx.strokeStyle = gradient;
+            this.ctx.lineWidth = drop.size;
+            this.ctx.lineCap = 'round';
+            this.ctx.beginPath();
+            this.ctx.moveTo(drop.x, drop.y - trailLength);
+            this.ctx.lineTo(drop.x, drop.y);
+            this.ctx.stroke();
+            
+            // Drop head
+            this.ctx.beginPath();
+            this.ctx.arc(drop.x, drop.y, drop.size, 0, Math.PI * 2);
+            this.ctx.fillStyle = `rgba(0, 245, 212, ${drop.opacity})`;
+            this.ctx.shadowBlur = 8;
+            this.ctx.shadowColor = 'rgba(0, 245, 212, 0.5)';
+            this.ctx.fill();
+            
+            this.ctx.restore();
+            
+            return drop.y < this.height + 50;
+        });
+    }
+    
+    // Create splash effect when drop hits water
+    createSplash(x, y) {
+        const splashCount = 3 + Math.floor(Math.random() * 3);
+        for (let i = 0; i < splashCount; i++) {
+            const angle = -Math.PI + Math.random() * Math.PI; // Upward spread
+            const speed = 2 + Math.random() * 4;
+            this.splashes.push({
+                x: x,
+                y: y,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed - 2,
+                size: 1 + Math.random() * 2,
+                opacity: 0.8,
+                life: 1
+            });
+        }
+    }
+    
+    // Update splash particles
+    updateSplashes() {
+        this.splashes = this.splashes.filter(splash => {
+            // Apply gravity
+            splash.vy += 0.15;
+            splash.x += splash.vx;
+            splash.y += splash.vy;
+            splash.life -= 0.03;
+            splash.opacity = splash.life * 0.8;
+            
+            // Draw splash
+            this.ctx.beginPath();
+            this.ctx.arc(splash.x, splash.y, splash.size, 0, Math.PI * 2);
+            this.ctx.fillStyle = `rgba(0, 245, 212, ${splash.opacity})`;
+            this.ctx.fill();
+            
+            return splash.life > 0;
+        });
+    }
+    
+    // Draw animated water surface line
+    drawWaterSurface() {
+        const waterY = this.height * (1 - this.waterLevel);
+        
+        this.ctx.save();
+        this.ctx.strokeStyle = 'rgba(0, 245, 212, 0.6)';
+        this.ctx.lineWidth = 2;
+        this.ctx.shadowBlur = 10;
+        this.ctx.shadowColor = 'rgba(0, 245, 212, 0.5)';
+        
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, waterY);
+        
+        // Wavy line
+        for (let x = 0; x <= this.width; x += 5) {
+            const waveY = waterY + Math.sin(x * 0.05 + this.waveTime * 2) * 3;
+            this.ctx.lineTo(x, waveY);
         }
         
-        requestAnimationFrame(() => this.animate());
+        this.ctx.stroke();
+        this.ctx.restore();
+    }
+    
+    // Update and draw bubbles
+    updateBubbles() {
+        this.bubbles = this.bubbles.filter(bubble => {
+            // Update position
+            bubble.wobblePhase += bubble.wobbleSpeed;
+            bubble.x += Math.sin(bubble.wobblePhase) * 1.5; // Wobble side to side
+            bubble.y -= bubble.speed; // Rise up
+            
+            // Slowly shrink as they rise
+            bubble.size *= 0.998;
+            
+            // Draw bubble
+            this.ctx.save();
+            this.ctx.beginPath();
+            this.ctx.arc(bubble.x, bubble.y, bubble.size, 0, Math.PI * 2);
+            
+            // Bubble gradient for 3D effect
+            const gradient = this.ctx.createRadialGradient(
+                bubble.x - bubble.size * 0.3, 
+                bubble.y - bubble.size * 0.3, 
+                0,
+                bubble.x, 
+                bubble.y, 
+                bubble.size
+            );
+            gradient.addColorStop(0, `rgba(255, 255, 255, ${bubble.opacity * 0.8})`);
+            gradient.addColorStop(0.5, `rgba(0, 245, 212, ${bubble.opacity * 0.4})`);
+            gradient.addColorStop(1, `rgba(0, 187, 249, ${bubble.opacity * 0.1})`);
+            
+            this.ctx.fillStyle = gradient;
+            this.ctx.fill();
+            
+            // Bubble highlight
+            this.ctx.beginPath();
+            this.ctx.arc(
+                bubble.x - bubble.size * 0.3, 
+                bubble.y - bubble.size * 0.3, 
+                bubble.size * 0.2, 
+                0, Math.PI * 2
+            );
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${bubble.opacity})`;
+            this.ctx.fill();
+            
+            this.ctx.restore();
+            
+            // Remove if off screen or too small
+            return bubble.y > -bubble.size && bubble.size > 1;
+        });
     }
 }
 
