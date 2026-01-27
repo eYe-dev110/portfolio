@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex Hu | Senior Software Engineer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Cursor follower with trail -->
+    <div class="cursor-follower"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-trail"></div>
+    
+    <!-- Floating code background -->
+    <div class="floating-code-bg">
+        <span class="float-code" style="--delay: 0s; --duration: 20s; --x: 10%;">const build = () => {}</span>
+        <span class="float-code" style="--delay: 2s; --duration: 25s; --x: 80%;">async function deploy()</span>
+        <span class="float-code" style="--delay: 4s; --duration: 22s; --x: 30%;">import { success } from 'life'</span>
+        <span class="float-code" style="--delay: 6s; --duration: 28s; --x: 60%;">export default Engineer</span>
+        <span class="float-code" style="--delay: 8s; --duration: 24s; --x: 90%;">return &lt;Innovation /&gt;</span>
+        <span class="float-code" style="--delay: 10s; --duration: 26s; --x: 20%;">await Promise.all(dreams)</span>
+        <span class="float-code" style="--delay: 12s; --duration: 21s; --x: 70%;">git push origin main</span>
+        <span class="float-code" style="--delay: 14s; --duration: 23s; --x: 45%;">npm run excellence</span>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo">
+            <span class="logo-bracket">&lt;</span>AH<span class="logo-bracket">/&gt;</span>
+        </div>
+        <div class="nav-links">
+            <a href="#about" class="nav-link">About</a>
+            <a href="#skills" class="nav-link">Skills</a>
+            <a href="#experience" class="nav-link">Experience</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </div>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            <span class="status-text">Available for opportunities</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <canvas id="particles-canvas"></canvas>
+        <!-- Morphing gradient blobs -->
+        <div class="morph-blob blob-1"></div>
+        <div class="morph-blob blob-2"></div>
+        <div class="morph-blob blob-3"></div>
+        <div class="hero-content">
+            <div class="hero-greeting">
+                <span class="greeting-line"></span>
+                <span class="greeting-text">Hello, I'm</span>
+            </div>
+            <h1 class="hero-name" data-text="Alex Hu">Alex Hu</h1>
+            <h2 class="hero-role">Senior Software Engineer</h2>
+            <p class="hero-description">
+                I build <span class="highlight-word">scalable systems</span> and <span class="highlight-word">reliable platforms</span> 
+                across healthcare, education, and commerce. 8+ years turning complex requirements into 
+                elegant, maintainable solutions.
+            </p>
+            <div class="hero-highlights">
+                <div class="highlight-item">
+                    <span class="highlight-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </span>
+                    <span>Full-Stack Development</span>
+                </div>
+                <div class="highlight-item">
+                    <span class="highlight-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </span>
+                    <span>Cloud Architecture</span>
+                </div>
+                <div class="highlight-item">
+                    <span class="highlight-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </span>
+                    <span>AI/ML Integration</span>
+                </div>
+            </div>
+            <div class="hero-cta">
+                <a href="#experience" class="cta-primary">
+                    <span class="cta-text">View My Work</span>
+                    <span class="cta-icon">→</span>
+                </a>
+                <a href="#contact" class="cta-secondary">
+                    <span>Get In Touch</span>
+                </a>
+            </div>
+        </div>
+        <div class="hero-grid"></div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-number">01</span>
+                <h2 class="section-title">About</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p class="about-intro reveal-text">
+                        Fullstack Senior Software Engineer with <span class="highlight">8+ years</span> of experience building and shipping customer-facing and internal platforms across <span class="highlight">education benefits</span>, <span class="highlight">healthcare</span>, and <span class="highlight">commerce</span>.
+                    </p>
+                    <p class="about-description reveal-text">
+                        I bring a strong bias toward reliability, testing, troubleshooting, and smooth releases. Comfortable owning work end-to-end — from designing workflows to implementing them, integrating with enterprise systems, and supporting production.
+                    </p>
+                    <p class="about-description reveal-text">
+                        Known for turning messy real-world requirements into simple, maintainable solutions. I demonstrate leadership in cross-functional initiatives, mentor team members, and leverage solid computer science principles with practical AI/ML experience.
+                    </p>
+                    <div class="about-stats reveal-up">
+                        <div class="stat">
+                            <span class="stat-number" data-count="8">0</span>
+                            <span class="stat-label">Years Experience</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number" data-count="5">0</span>
+                            <span class="stat-label">Companies</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number" data-count="50">0</span>
+                            <span class="stat-label">+ Projects Shipped</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visual reveal-up">
+                    <div class="code-window">
+                        <div class="window-header">
+                            <div class="window-dots">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <span class="window-title">alex.config.ts</span>
+                        </div>
+                        <pre class="window-code"><code><span class="code-keyword">const</span> <span class="code-variable">engineer</span> = {
+  <span class="code-property">name</span>: <span class="code-string">"Alex Hu"</span>,
+  <span class="code-property">role</span>: <span class="code-string">"Senior Software Engineer"</span>,
+  <span class="code-property">location</span>: <span class="code-string">"Arlington, VA"</span>,
+  <span class="code-property">education</span>: <span class="code-string">"UPenn Engineering '17"</span>,
+  <span class="code-property">passion</span>: [
+    <span class="code-string">"Scalable Systems"</span>,
+    <span class="code-string">"Clean Architecture"</span>,
+    <span class="code-string">"AI/ML Integration"</span>
+  ],
+  <span class="code-property">available</span>: <span class="code-boolean">true</span>
+};</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="skills" id="skills">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-number">02</span>
+                <h2 class="section-title">Skills</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="skills-grid">
+                <div class="skill-category reveal-up" data-delay="0">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <h3 class="category-title">Languages</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">Go</span>
+                        <span class="skill-tag">TypeScript</span>
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">Scala</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">C/C++</span>
+                        <span class="skill-tag">SQL</span>
+                    </div>
+                </div>
+                <div class="skill-category reveal-up" data-delay="100">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <path d="M3 9h18M9 21V9"/>
+                        </svg>
+                    </div>
+                    <h3 class="category-title">Frameworks</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">Node.js</span>
+                        <span class="skill-tag">Spring Boot</span>
+                        <span class="skill-tag">Next.js</span>
+                        <span class="skill-tag">Angular</span>
+                        <span class="skill-tag">Vue.js</span>
+                        <span class="skill-tag">FastAPI</span>
+                        <span class="skill-tag">Play/Akka</span>
+                    </div>
+                </div>
+                <div class="skill-category reveal-up" data-delay="200">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                    </div>
+                    <h3 class="category-title">Cloud & Infra</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">AWS</span>
+                        <span class="skill-tag">Kubernetes</span>
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">Terraform</span>
+                        <span class="skill-tag">GCP</span>
+                        <span class="skill-tag">Azure</span>
+                        <span class="skill-tag">ArgoCD</span>
+                        <span class="skill-tag">Serverless</span>
+                    </div>
+                </div>
+                <div class="skill-category reveal-up" data-delay="300">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/>
+                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                        </svg>
+                    </div>
+                    <h3 class="category-title">Data & APIs</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">PostgreSQL</span>
+                        <span class="skill-tag">GraphQL</span>
+                        <span class="skill-tag">MongoDB</span>
+                        <span class="skill-tag">DynamoDB</span>
+                        <span class="skill-tag">BigQuery</span>
+                        <span class="skill-tag">Kafka</span>
+                        <span class="skill-tag">gRPC</span>
+                        <span class="skill-tag">REST</span>
+                    </div>
+                </div>
+                <div class="skill-category reveal-up" data-delay="400">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3 class="category-title">AI & ML</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">OpenAI APIs</span>
+                        <span class="skill-tag">Vertex AI</span>
+                        <span class="skill-tag">RAG</span>
+                        <span class="skill-tag">Embeddings</span>
+                        <span class="skill-tag">MCP</span>
+                        <span class="skill-tag">TensorFlow</span>
+                        <span class="skill-tag">PyTorch</span>
+                    </div>
+                </div>
+                <div class="skill-category reveal-up" data-delay="500">
+                    <div class="category-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <h3 class="category-title">Process</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Microservices</span>
+                        <span class="skill-tag">CI/CD</span>
+                        <span class="skill-tag">Agile</span>
+                        <span class="skill-tag">A/B Testing</span>
+                        <span class="skill-tag">Event-Driven</span>
+                        <span class="skill-tag">IaC</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section class="experience" id="experience">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-number">03</span>
+                <h2 class="section-title">Experience</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="experience-timeline">
+                <div class="timeline-line"></div>
+                
+                <div class="timeline-item reveal-left" data-company="guild">
+                    <div class="timeline-marker">
+                        <div class="marker-dot"></div>
+                        <div class="marker-ring"></div>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div class="timeline-company">Guild</div>
+                            <div class="timeline-period">JUL 2025 - DEC 2025</div>
+                        </div>
+                        <div class="timeline-role">Senior Software Engineer</div>
+                        <div class="timeline-tech">
+                            <span>React</span><span>Angular</span><span>TypeScript</span><span>GraphQL</span><span>Node.js</span><span>AWS</span><span>PostgreSQL</span>
+                        </div>
+                        <ul class="timeline-highlights">
+                            <li>Led end-to-end delivery on Guild Grow experiences, mentoring teammates while shipping learner progression and employer reporting features</li>
+                            <li>Built Guild Academy discovery/enrollment flows streamlining course selection</li>
+                            <li>Contributed to AI Native Experiences prototypes integrating OpenAI/Vertex AI APIs with MCP for embedding-driven UX patterns</li>
+                            <li>Enabled GTM workflows by integrating Salesforce via REST/Bulk APIs with AWS Lambda</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item reveal-right" data-company="oscar">
+                    <div class="timeline-marker">
+                        <div class="marker-dot"></div>
+                        <div class="marker-ring"></div>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div class="timeline-company">Oscar Health</div>
+                            <div class="timeline-period">MAY 2022 - APR 2025</div>
+                        </div>
+                        <div class="timeline-role">Senior Software Engineer</div>
+                        <div class="timeline-tech">
+                            <span>Go</span><span>Python</span><span>React</span><span>Kubernetes</span><span>Thrift</span><span>BigQuery</span><span>Terraform</span>
+                        </div>
+                        <ul class="timeline-highlights">
+                            <li>Led migration of provider/claims adjudication into Oscar's new claims system, providing technical leadership while building Go services on EKS/Kubernetes</li>
+                            <li>Delivered claims-ops "holds" workflows with role-based access and auditable change traces</li>
+                            <li>Built +Oscar partner-ready platform capabilities exposing REST APIs with automated deployments</li>
+                            <li>Implemented Campaign Builder for Next Best Actions engine enabling A/B tested member messaging</li>
+                            <li>Optimized cross-service performance lowering tail latency under peak operational load</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item reveal-left" data-company="amazon">
+                    <div class="timeline-marker">
+                        <div class="marker-dot"></div>
+                        <div class="marker-ring"></div>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div class="timeline-company">Amazon</div>
+                            <div class="timeline-period">AUG 2020 - MAY 2022</div>
+                        </div>
+                        <div class="timeline-role">Software Engineer</div>
+                        <div class="timeline-tech">
+                            <span>Java</span><span>TypeScript</span><span>React</span><span>Lambda</span><span>DynamoDB</span><span>Step Functions</span><span>Kinesis</span>
+                        </div>
+                        <ul class="timeline-highlights">
+                            <li>Shipped launch-critical capabilities for <strong>Buy with Prime</strong> merchant checkout and order flows</li>
+                            <li>Delivered core enrollment services for <strong>Amazon One</strong> palm-based identity powered by CV/ML</li>
+                            <li>Developed customer-facing pricing experiences for <strong>Amazon Pharmacy</strong> with compliant UX updates</li>
+                            <li>Scaled virtual-care scheduling for <strong>Amazon Care</strong> nationwide expansion</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item reveal-right" data-company="rally">
+                    <div class="timeline-marker">
+                        <div class="marker-dot"></div>
+                        <div class="marker-ring"></div>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div class="timeline-company">Rally Health</div>
+                            <div class="timeline-period">MAY 2018 - AUG 2020</div>
+                        </div>
+                        <div class="timeline-role">Software Engineer</div>
+                        <div class="timeline-tech">
+                            <span>Scala</span><span>Play</span><span>Akka</span><span>Kafka</span><span>React</span><span>Spark</span><span>MongoDB</span>
+                        </div>
+                        <ul class="timeline-highlights">
+                            <li>Built core Rally Engage backend services supporting web/mobile engagement experience</li>
+                            <li>Implemented personalization using Apache Spark and Redshift for mission recommendations</li>
+                            <li>Delivered activity tracking for Rally Challenges and Rewards using Kafka event streaming</li>
+                            <li>Integrated fitness device APIs (Fitbit, Garmin, Strava) with containerized services</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item reveal-left" data-company="capitalone">
+                    <div class="timeline-marker">
+                        <div class="marker-dot"></div>
+                        <div class="marker-ring"></div>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div class="timeline-company">Capital One</div>
+                            <div class="timeline-period">JUL 2017 - MAY 2018</div>
+                        </div>
+                        <div class="timeline-role">Software Engineer</div>
+                        <div class="timeline-tech">
+                            <span>Java</span><span>Python</span><span>AWS</span><span>Kubernetes</span><span>ML/NLP</span><span>Terraform</span>
+                        </div>
+                        <ul class="timeline-highlights">
+                            <li>Shipped customer-facing capabilities for <strong>Eno</strong> virtual assistant using ML/NLP patterns</li>
+                            <li>Implemented cloud-governance guardrails with Cloud Custodian for security and compliance</li>
+                            <li>Supported Critical Stack container orchestration for regulated workloads</li>
+                            <li>Enhanced Hygieia DevOps dashboard for build-and-release visibility</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-number">04</span>
+                <h2 class="section-title">Contact</h2>
+                <div class="section-line"></div>
+            </div>
+            <div class="contact-content">
+                <div class="contact-text reveal-up">
+                    <h3 class="contact-heading">Let's Build Something Together</h3>
+                    <p class="contact-description">
+                        I'm always interested in hearing about new opportunities, challenging projects, or just connecting with fellow engineers.
+                    </p>
+                </div>
+                <div class="contact-links reveal-up">
+                    <a href="mailto:thealexhu0@gmail.com" class="contact-card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-label">Email</span>
+                            <span class="card-value">thealexhu0@gmail.com</span>
+                        </div>
+                        <div class="card-arrow">→</div>
+                    </a>
+                    <a href="tel:+15404055780" class="contact-card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-label">Phone</span>
+                            <span class="card-value">+1 (540) 405-5780</span>
+                        </div>
+                        <div class="card-arrow">→</div>
+                    </a>
+                    <a href="https://www.linkedin.com/in/gearsgrinding/" target="_blank" class="contact-card">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                <rect x="2" y="9" width="4" height="12"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-label">LinkedIn</span>
+                            <span class="card-value">linkedin.com/in/gearsgrinding</span>
+                        </div>
+                        <div class="card-arrow">→</div>
+                    </a>
+                    <div class="contact-card location">
+                        <div class="card-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                        </div>
+                        <div class="card-content">
+                            <span class="card-label">Location</span>
+                            <span class="card-value">Arlington, VA 22203</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <span class="footer-logo">
+                    <span class="logo-bracket">&lt;</span>AH<span class="logo-bracket">/&gt;</span>
+                </span>
+                <span class="footer-edu">University of Pennsylvania '17</span>
+            </div>
+            <div class="footer-right">
+                <span>Designed & Built by Alex Hu</span>
+                <span class="footer-year">© 2025</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
