@@ -234,11 +234,24 @@ body:hover .cursor-dot {
     pointer-events: none;
 }
 
-.hero-content {
+/* Hero Wrapper - Two Column Layout */
+.hero-wrapper {
     position: relative;
     z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    max-width: 1400px;
+    width: 100%;
+    padding: 0 2rem;
+}
+
+.hero-content {
+    position: relative;
     text-align: left;
-    max-width: 800px;
+    max-width: 600px;
+    flex: 1;
 }
 
 /* Greeting */
@@ -565,6 +578,103 @@ body:hover .cursor-dot {
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.1em;
+}
+
+/* ==========================================
+   Particle Portrait - Hero Section
+   ========================================== */
+.particle-portrait-container {
+    position: relative;
+    width: 350px;
+    height: 450px;
+    flex-shrink: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(18, 18, 26, 0.6);
+    border: 1px solid var(--border-subtle);
+    cursor: none;
+    opacity: 0;
+    animation: portraitReveal 1s ease forwards 0.8s;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes portraitReveal {
+    from {
+        opacity: 0;
+        transform: translateX(50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+#particle-portrait {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.portrait-hint {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    padding: 0.5rem 1rem;
+    background: rgba(10, 10, 15, 0.9);
+    border-radius: 20px;
+    border: 1px solid var(--border-subtle);
+    opacity: 0;
+    animation: hintFade 4s ease-in-out 3s forwards;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+@keyframes hintFade {
+    0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+}
+
+/* Glowing border on hover */
+.particle-portrait-container::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 22px;
+    padding: 2px;
+    background: var(--gradient-accent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.particle-portrait-container:hover::before {
+    opacity: 1;
+}
+
+/* Glow effect behind */
+.particle-portrait-container::after {
+    content: '';
+    position: absolute;
+    inset: -20px;
+    background: radial-gradient(ellipse at center, rgba(0, 245, 212, 0.15), transparent 70%);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.particle-portrait-container:hover::after {
+    opacity: 1;
 }
 
 /* Code Window */
@@ -1110,6 +1220,32 @@ body:hover .cursor-dot {
     }
 }
 
+@media (max-width: 992px) {
+    .hero-wrapper {
+        flex-direction: column;
+        text-align: center;
+        gap: 3rem;
+    }
+    
+    .hero-content {
+        text-align: center;
+        max-width: 100%;
+    }
+    
+    .hero-highlights {
+        justify-content: center;
+    }
+    
+    .hero-cta {
+        justify-content: center;
+    }
+    
+    .particle-portrait-container {
+        width: 280px;
+        height: 360px;
+    }
+}
+
 @media (max-width: 768px) {
     .nav {
         padding: 1rem 1.5rem;
@@ -1125,6 +1261,11 @@ body:hover .cursor-dot {
     
     .hero {
         padding: 0 1.5rem;
+    }
+    
+    .particle-portrait-container {
+        width: 240px;
+        height: 310px;
     }
     
     .section-container {

@@ -770,6 +770,298 @@ class SectionCounter {
 }
 
 // ==========================================
+// IMAGE PARTICLE PORTRAIT - The WOW Factor!
+// ==========================================
+class ImageParticles {
+    constructor() {
+        this.canvas = document.getElementById('particle-portrait');
+        if (!this.canvas) return;
+        
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.mouse = { x: null, y: null, radius: 80 };
+        this.imageLoaded = false;
+        this.animationPhase = 'assembling'; // 'assembling', 'idle', 'exploding'
+        
+        // Configuration
+        this.particleGap = 3; // Lower = more particles (more detailed)
+        this.particleSize = 2;
+        this.assembleSpeed = 0.08;
+        this.returnSpeed = 0.05;
+        this.mouseRepelForce = 8;
+        
+        this.init();
+    }
+    
+    init() {
+        this.setupCanvas();
+        this.loadImage();
+        this.setupEventListeners();
+    }
+    
+    setupCanvas() {
+        const container = this.canvas.parentElement;
+        const rect = container.getBoundingClientRect();
+        
+        // High DPI support
+        const dpr = window.devicePixelRatio || 1;
+        this.canvas.width = rect.width * dpr;
+        this.canvas.height = rect.height * dpr;
+        this.canvas.style.width = rect.width + 'px';
+        this.canvas.style.height = rect.height + 'px';
+        this.ctx.scale(dpr, dpr);
+        
+        this.width = rect.width;
+        this.height = rect.height;
+    }
+    
+    loadImage() {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+            this.processImage(img);
+            this.imageLoaded = true;
+            this.animate();
+        };
+        img.onerror = () => {
+            console.log('Image loading failed, creating placeholder effect');
+            this.createPlaceholderParticles();
+            this.imageLoaded = true;
+            this.animate();
+        };
+        img.src = 'photo.png';
+    }
+    
+    processImage(img) {
+        // Create temporary canvas for image processing
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        // Calculate aspect ratio fitting
+        const imgAspect = img.width / img.height;
+        const canvasAspect = this.width / this.height;
+        
+        let drawWidth, drawHeight, offsetX, offsetY;
+        
+        if (imgAspect > canvasAspect) {
+            drawHeight = this.height;
+            drawWidth = this.height * imgAspect;
+            offsetX = (this.width - drawWidth) / 2;
+            offsetY = 0;
+        } else {
+            drawWidth = this.width;
+            drawHeight = this.width / imgAspect;
+            offsetX = 0;
+            offsetY = (this.height - drawHeight) / 2;
+        }
+        
+        tempCanvas.width = this.width;
+        tempCanvas.height = this.height;
+        
+        // Draw image centered
+        tempCtx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+        
+        // Get pixel data
+        const imageData = tempCtx.getImageData(0, 0, this.width, this.height);
+        const pixels = imageData.data;
+        
+        // Create particles from pixels
+        this.particles = [];
+        
+        for (let y = 0; y < this.height; y += this.particleGap) {
+            for (let x = 0; x < this.width; x += this.particleGap) {
+                const index = (y * this.width + x) * 4;
+                const r = pixels[index];
+                const g = pixels[index + 1];
+                const b = pixels[index + 2];
+                const a = pixels[index + 3];
+                
+                // Skip transparent/near-black pixels
+                if (a < 50) continue;
+                const brightness = (r + g + b) / 3;
+                if (brightness < 15) continue;
+                
+                // Calculate HSL for color enhancement
+                const max = Math.max(r, g, b);
+                const min = Math.min(r, g, b);
+                const lightness = (max + min) / 2;
+                
+                // Enhance with accent color for darker areas
+                let finalR = r, finalG = g, finalB = b;
+                if (brightness < 80) {
+                    // Add teal tint to shadows
+                    finalR = Math.min(255, r + 10);
+                    finalG = Math.min(255, g + 30);
+                    finalB = Math.min(255, b + 25);
+                }
+                
+                // Random starting position (scattered)
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * Math.max(this.width, this.height) + 200;
+                const startX = this.width / 2 + Math.cos(angle) * distance;
+                const startY = this.height / 2 + Math.sin(angle) * distance;
+                
+                this.particles.push({
+                    x: startX,
+                    y: startY,
+                    targetX: x,
+                    targetY: y,
+                    originX: x,
+                    originY: y,
+                    vx: 0,
+                    vy: 0,
+                    color: `rgb(${finalR}, ${finalG}, ${finalB})`,
+                    size: this.particleSize + (brightness / 255) * 1,
+                    brightness: brightness,
+                    assembled: false
+                });
+            }
+        }
+        
+        console.log(`Created ${this.particles.length} particles`);
+    }
+    
+    createPlaceholderParticles() {
+        // Fallback: create a simple particle pattern
+        const centerX = this.width / 2;
+        const centerY = this.height / 2;
+        const radius = Math.min(this.width, this.height) * 0.35;
+        
+        for (let i = 0; i < 2000; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const r = Math.random() * radius;
+            const x = centerX + Math.cos(angle) * r;
+            const y = centerY + Math.sin(angle) * r;
+            
+            // Random starting position
+            const startAngle = Math.random() * Math.PI * 2;
+            const startDist = Math.random() * 500 + 200;
+            
+            this.particles.push({
+                x: centerX + Math.cos(startAngle) * startDist,
+                y: centerY + Math.sin(startAngle) * startDist,
+                targetX: x,
+                targetY: y,
+                originX: x,
+                originY: y,
+                vx: 0,
+                vy: 0,
+                color: `rgba(0, ${Math.random() * 100 + 155}, ${Math.random() * 50 + 180}, 0.8)`,
+                size: Math.random() * 2 + 1,
+                brightness: 150,
+                assembled: false
+            });
+        }
+    }
+    
+    setupEventListeners() {
+        // Mouse move
+        this.canvas.addEventListener('mousemove', (e) => {
+            const rect = this.canvas.getBoundingClientRect();
+            this.mouse.x = e.clientX - rect.left;
+            this.mouse.y = e.clientY - rect.top;
+        });
+        
+        // Mouse leave
+        this.canvas.addEventListener('mouseleave', () => {
+            this.mouse.x = null;
+            this.mouse.y = null;
+        });
+        
+        // Click to explode
+        this.canvas.addEventListener('click', () => {
+            this.explode();
+        });
+        
+        // Resize
+        window.addEventListener('resize', () => {
+            this.setupCanvas();
+            if (this.imageLoaded) {
+                // Recalculate particle positions on resize
+                const img = new Image();
+                img.onload = () => this.processImage(img);
+                img.src = 'photo.png';
+            }
+        });
+    }
+    
+    explode() {
+        this.animationPhase = 'exploding';
+        
+        this.particles.forEach(particle => {
+            const angle = Math.random() * Math.PI * 2;
+            const force = Math.random() * 15 + 5;
+            particle.vx = Math.cos(angle) * force;
+            particle.vy = Math.sin(angle) * force;
+            particle.assembled = false;
+        });
+        
+        // Return to formation after a delay
+        setTimeout(() => {
+            this.animationPhase = 'assembling';
+        }, 1500);
+    }
+    
+    animate() {
+        if (!this.imageLoaded) return;
+        
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        
+        let assembledCount = 0;
+        
+        this.particles.forEach(particle => {
+            // Mouse repulsion
+            if (this.mouse.x !== null && this.mouse.y !== null) {
+                const dx = particle.x - this.mouse.x;
+                const dy = particle.y - this.mouse.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < this.mouse.radius) {
+                    const force = (this.mouse.radius - distance) / this.mouse.radius;
+                    const angle = Math.atan2(dy, dx);
+                    particle.vx += Math.cos(angle) * force * this.mouseRepelForce;
+                    particle.vy += Math.sin(angle) * force * this.mouseRepelForce;
+                }
+            }
+            
+            // Return to target position
+            const targetDx = particle.targetX - particle.x;
+            const targetDy = particle.targetY - particle.y;
+            const targetDist = Math.sqrt(targetDx * targetDx + targetDy * targetDy);
+            
+            const speed = this.animationPhase === 'assembling' ? this.assembleSpeed : this.returnSpeed;
+            
+            if (targetDist > 1) {
+                particle.vx += targetDx * speed;
+                particle.vy += targetDy * speed;
+            } else {
+                particle.assembled = true;
+                assembledCount++;
+            }
+            
+            // Apply velocity with friction
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            particle.vx *= 0.9;
+            particle.vy *= 0.92;
+            
+            // Draw particle
+            this.ctx.beginPath();
+            this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            this.ctx.fillStyle = particle.color;
+            this.ctx.fill();
+        });
+        
+        // Check if assembly is complete
+        if (assembledCount >= this.particles.length * 0.95 && this.animationPhase === 'assembling') {
+            this.animationPhase = 'idle';
+        }
+        
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+// ==========================================
 // Initialize Everything
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -794,6 +1086,9 @@ document.addEventListener('DOMContentLoaded', () => {
         new SkillTagEffects();
         new ScrollProgress();
         new SectionCounter();
+        
+        // PHOTO PARTICLE PORTRAIT - The showstopper!
+        new ImageParticles();
         
         // Add loaded class for any initial animations
         document.body.classList.add('loaded');
